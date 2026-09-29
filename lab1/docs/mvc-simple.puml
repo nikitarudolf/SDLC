@@ -1,0 +1,54 @@
+@startuml mvc-simple
+' Компактная диаграмма каркаса MVC для вставки в отчёт.
+' Если диаграмма не отрисовывается (не установлен Graphviz),
+' раскомментировать строку ниже - будет использован встроенный движок:
+' !pragma layout smetana
+skinparam linetype ortho
+title MVC с активной моделью - "Кредит на жилье" (вариант 19)
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+interface ModelListener <<Observer>> {
+    + modelChanged(model : LoanModel) : void
+}
+
+class LoanModel <<Model>> {
+    - listeners : List<ModelListener>
+    - lastInput : RawInput
+    - result : LoanResult
+    - errorMessage : String
+    + addListener(l : ModelListener) : void
+    + removeListener(l : ModelListener) : void
+    + calculate(raw : RawInput) : void
+    - fireModelChanged() : void
+}
+
+class MainFrame <<View>> {
+    - lastInput : RawInput
+    + modelChanged(model : LoanModel) : void
+    - refresh() : void
+}
+
+class InputDialog <<View>> {
+    + modelChanged(model : LoanModel) : void
+    + dispose() : void
+    - submit() : void
+}
+
+class LoanController <<Controller>> {
+    + onDataEntered(amount : String, rate : String, years : String) : void
+}
+
+MainFrame ..|> ModelListener
+InputDialog ..|> ModelListener
+LoanModel o--> "0..*" ModelListener : оповещает
+LoanController --> LoanModel : calculate()
+MainFrame --> LoanController : действия пользователя
+InputDialog --> LoanController : действия пользователя
+MainFrame --> LoanModel : addListener(), getResult()
+InputDialog --> LoanModel : addListener(), hasError()
+MainFrame ..> InputDialog : открывает
+
+
+@enduml
