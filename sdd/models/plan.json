@@ -1,0 +1,405 @@
+{
+ "v1": {
+  "order": [
+   "I1",
+   "I2",
+   "I3",
+   "I4+"
+  ],
+  "iters": {
+   "I1": [
+    "09.11",
+    "22.11",
+    40
+   ],
+   "I2": [
+    "23.11",
+    "06.12",
+    40
+   ],
+   "I3": [
+    "07.12",
+    "20.12",
+    40
+   ],
+   "I4": [
+    "21.12",
+    "27.12",
+    20
+   ],
+   "I4+": [
+    "21.12",
+    "03.01",
+    40
+   ]
+  },
+  "jun_caps": {},
+  "items": {
+   "I1": [
+    [
+     "dev",
+     "F01 Project Setup & CI",
+     10
+    ],
+    [
+     "dev",
+     "F02 Accounts & Authentication",
+     14
+    ],
+    [
+     "dev",
+     "F03 Disciplines & Groups",
+     6
+    ],
+    [
+     "dev",
+     "F04 Slot Management",
+     10
+    ]
+   ],
+   "I2": [
+    [
+     "dev",
+     "F06 Slot Browsing",
+     6
+    ],
+    [
+     "dev",
+     "F07 Booking",
+     14
+    ],
+    [
+     "dev",
+     "F08 Cancel & Move Booking",
+     8
+    ],
+    [
+     "dev",
+     "F10 Queue Order & ETA",
+     4
+    ],
+    [
+     "dev",
+     "F05 Slot Series",
+     6
+    ]
+   ],
+   "I3": [
+    [
+     "dev",
+     "F09 Waitlist & Auto-Promotion",
+     14
+    ],
+    [
+     "dev",
+     "F13 Email Notifications",
+     10
+    ],
+    [
+     "dev",
+     "F11 Live Queue Control",
+     12
+    ]
+   ],
+   "I4+": [
+    [
+     "dev",
+     "F12 Live Position Updates",
+     12
+    ],
+    [
+     "dev",
+     "F14 Lab Progress",
+     6
+    ],
+    [
+     "dev",
+     "F15 No-show Restriction",
+     4
+    ],
+    [
+     "dev",
+     "F16 Booked List Export",
+     3
+    ],
+    [
+     "dev",
+     "F17 Testing & Hardening",
+     10
+    ]
+   ]
+  }
+ },
+ "v2": {
+  "order": [
+   "I1",
+   "I2",
+   "I3",
+   "I4"
+  ],
+  "iters": {
+   "I1": [
+    "09.11",
+    "22.11",
+    40
+   ],
+   "I2": [
+    "23.11",
+    "06.12",
+    40
+   ],
+   "I3": [
+    "07.12",
+    "20.12",
+    40
+   ],
+   "I4": [
+    "21.12",
+    "27.12",
+    20
+   ]
+  },
+  "jun_caps": {},
+  "items": {
+   "I1": [
+    [
+     "dev",
+     "F01 Project Setup & CI",
+     10
+    ],
+    [
+     "dev",
+     "F02 Accounts & Authentication",
+     14
+    ],
+    [
+     "dev",
+     "F03 Disciplines & Groups",
+     6
+    ],
+    [
+     "dev",
+     "F04 Slot Management",
+     10
+    ]
+   ],
+   "I2": [
+    [
+     "dev",
+     "F06 Slot Browsing",
+     6
+    ],
+    [
+     "dev",
+     "F07 Booking",
+     14
+    ],
+    [
+     "dev",
+     "F08 Cancel & Move Booking",
+     8
+    ],
+    [
+     "dev",
+     "F10 Queue Order & ETA",
+     4
+    ],
+    [
+     "dev",
+     "F05 Slot Series",
+     6
+    ]
+   ],
+   "I3": [
+    [
+     "dev",
+     "F09 Waitlist & Auto-Promotion",
+     14
+    ],
+    [
+     "dev",
+     "F13 Email Notifications",
+     10
+    ],
+    [
+     "dev",
+     "F11 Live Queue Control",
+     12
+    ],
+    [
+     "dev",
+     "F12 Live Position Updates",
+     4
+    ]
+   ],
+   "I4": [
+    [
+     "dev",
+     "F14 Lab Progress",
+     3
+    ],
+    [
+     "dev",
+     "F17 Testing & Hardening",
+     10
+    ]
+   ]
+  }
+ },
+ "v3": {
+  "order": [
+   "I1",
+   "I2",
+   "I3",
+   "I4"
+  ],
+  "iters": {
+   "I1": [
+    "09.11",
+    "22.11",
+    40
+   ],
+   "I2": [
+    "23.11",
+    "06.12",
+    40
+   ],
+   "I3": [
+    "07.12",
+    "20.12",
+    40
+   ],
+   "I4": [
+    "21.12",
+    "27.12",
+    20
+   ]
+  },
+  "jun_caps": {
+   "I1": 30,
+   "I2": 30,
+   "I3": 30,
+   "I4": 15
+  },
+  "items": {
+   "I1": [
+    [
+     "dev",
+     "F01 Project Setup & CI",
+     10
+    ],
+    [
+     "dev",
+     "F02 Accounts & Authentication",
+     14
+    ],
+    [
+     "dev",
+     "F03 Disciplines & Groups",
+     6
+    ],
+    [
+     "dev",
+     "F04 Slot Management",
+     10
+    ]
+   ],
+   "I2": [
+    [
+     "dev",
+     "F06 Slot Browsing",
+     6
+    ],
+    [
+     "dev",
+     "F07 Booking",
+     14
+    ],
+    [
+     "dev",
+     "F08 Cancel & Move Booking",
+     8
+    ],
+    [
+     "dev",
+     "F10 Queue Order & ETA",
+     4
+    ],
+    [
+     "dev",
+     "Ревью кода junior",
+     2
+    ],
+    [
+     "jun",
+     "Онбординг",
+     6
+    ],
+    [
+     "jun",
+     "F05 Slot Series",
+     6
+    ]
+   ],
+   "I3": [
+    [
+     "dev",
+     "F09 Waitlist & Auto-Promotion",
+     14
+    ],
+    [
+     "dev",
+     "F13 Email Notifications",
+     10
+    ],
+    [
+     "dev",
+     "F11 Live Queue Control",
+     12
+    ],
+    [
+     "dev",
+     "F18 сервис ведомости",
+     4
+    ],
+    [
+     "jun",
+     "F18 страница ведомости",
+     6
+    ],
+    [
+     "jun",
+     "F18 выгрузка .xlsx",
+     5
+    ]
+   ],
+   "I4": [
+    [
+     "dev",
+     "F12 Live Position Updates",
+     4
+    ],
+    [
+     "dev",
+     "F18 права и тесты",
+     4
+    ],
+    [
+     "dev",
+     "F17 Testing & Hardening",
+     4
+    ],
+    [
+     "dev",
+     "Ревью кода junior",
+     2
+    ],
+    [
+     "jun",
+     "F17 приёмочные тесты",
+     6
+    ]
+   ]
+  }
+ }
+}
