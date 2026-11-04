@@ -15,6 +15,8 @@ package LabQueueBooking {
         attribute position : Integer;          // позиция в очереди или листе ожидания
         attribute minutesToStart : Integer;    // минут до начала слота
         attribute freeSeats : Integer;
+        attribute minutesSinceCalled : Integer;  // минут после вызова (REQ-FUNC-020)
+        attribute noShowAckAt : String;          // когда студент подтвердил предупреждение
     }
 
     state def BookingState {
@@ -23,6 +25,7 @@ package LabQueueBooking {
 
         action notifyPromoted;  // письмо и уведомление «Вы записаны» (REQ-FUNC-010)
         action startPromotion;  // продвинуть первого из листа ожидания
+        action notifyAnnulled;  // письмо «Запись аннулирована» (REQ-FUNC-020)
 
         entry; then decide;
         state decide;
@@ -77,6 +80,8 @@ package LabQueueBooking {
             then Rework;
         transition noShow
             first Defending accept NoShow
+            if minutesSinceCalled >= 5      // запись аннулируется (REQ-FUNC-020)
+            do action notifyAnnulled
             then NoShow;
     }
 }

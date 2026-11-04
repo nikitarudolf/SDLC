@@ -66,6 +66,10 @@ package LabQueueUi {
         part seatsInfo : Badge;
         part estimate : Panel { attribute :>> header = "Позиция и расчётное время"; }
         part rulesNote : TextLabel;
+        part noShowAck : CheckBox {
+            attribute :>> label = "Я понимаю, что если не подойду в течение 5 минут после вызова, запись будет аннулирована";
+            attribute :>> checked = false;   // без отметки confirmButton недоступна (REQ-FUNC-020)
+        }
         part cancelButton : Button { attribute :>> caption = "Отмена"; }
         part confirmButton : Button { attribute :>> caption = "Записаться"; }
         part waitlistButton : Button {
@@ -89,7 +93,8 @@ package LabQueueUi {
             part myPos : TextLabel;
             part eta : TextLabel;
             part queueStrip : Badge[1..*];
-            part updated : TextLabel;    // обновляется по SSE (REQ-FUNC-013)
+            part updated : TextLabel;    // обновляется опросом раз в 10 с (REQ-FUNC-013)
+            part noShowWarning : TextLabel;  // предупреждение о неявке (REQ-FUNC-020)
         }
         part bookingsList : Table {
             attribute :>> columns = ("Дисциплина", "ЛР", "Слот", "Позиция", "Расчётное время",
@@ -149,6 +154,25 @@ package LabQueueUi {
         comment journalNote /* Все действия попадают в журнал слота (REQ-OBS-001). */
     }
 
+    part def TeacherReportsScreen :> Screen {
+        attribute :>> title = "Отчёты";
+        attribute :>> route = "/teacher/reports";
+        part navBar : NavBar { attribute :>> active = "Отчёты"; }
+        part filters : Panel {
+            part discipline : ComboBox;
+            part group : ComboBox;
+            part period : DateField[2];
+            part exportButton : Button { attribute :>> caption = "Выгрузить .xlsx"; }
+        }
+        part reportTabs : Panel { attribute :>> header = "Ведомость | Отчёт о записи"; }
+        part summary : Panel { part categoryCard : Badge[4]; }   // не записывались, записаны, лист, неявки
+        part activityTable : Table {
+            attribute :>> columns = ("Студент", "Категория", "Записей", "Защищено", "На доработку",
+                                     "Неявок", "Ближайшая запись");
+        }
+        comment reportsNote /* Отчёт о записи (REQ-FUNC-019) и ведомость (REQ-FUNC-018). */
+    }
+
     // ---------- навигация ----------
     attribute def LoginOk { attribute role : String; }
     attribute def Logout;
@@ -161,6 +185,7 @@ package LabQueueUi {
         state MyBookings;
         state TeacherSchedule;
         state LiveQueue;
+        state Reports;
 
         transition first Login accept ok : LoginOk if ok.role == "Student" then Slots;
         transition first Login accept ok : LoginOk if ok.role == "Teacher" then TeacherSchedule;
@@ -172,5 +197,7 @@ package LabQueueUi {
         transition first MyBookings then Booking;      // move
         transition first TeacherSchedule then LiveQueue;   // startSlot
         transition first LiveQueue then TeacherSchedule;   // finishSlot
+        transition first TeacherSchedule then Reports;     // menu «Отчёты»
+        transition first Reports then TeacherSchedule;     // menu «Расписание»
     }
 }

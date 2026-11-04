@@ -119,7 +119,7 @@ def data_model():
     add("slot", 420, 220, 290, "slot", ["PK id", "FK discipline_id", "FK teacher_id", "starts_at, ends_at", "place",
                                          "defense_minutes", "capacity", "status", "series_id", "version"])
     add("book", 800, 260, 280, "booking", ["PK id", "FK slot_id", "FK student_id", "lab_no", "status", "position",
-                                            "created_at", "called_at"])
+                                            "created_at", "called_at", "noshow_ack_at"])
     add("jour", 420, 560, 290, "journal_entry", ["PK id", "FK slot_id", "FK booking_id", "FK actor_id", "action",
                                                   "reason", "at"])
     add("out", 20, 470, 270, "outbox_email", ["PK id", "to_email", "template", "payload (jsonb)", "attempts",
@@ -135,7 +135,7 @@ def data_model():
     s += rel((710, 330), (800, 330), "1", "*", 718, 322, 782, 322)                       # slot — booking
     s += ln([(290, 190), (760, 190), (760, 300), (800, 300)], arrow=None) + '<text x="296" y="184" class="lb">1</text><text x="782" y="294" class="lb">*</text>'
     s += rel((565, 488), (565, 560), "1", "*", 572, 506, 572, 552)                       # slot — journal
-    s += ln([(1000, 484), (1000, 640), (710, 640)], arrow=None) + '<text x="1007" y="502" class="lb">1</text><text x="718" y="634" class="lb">*</text>'
+    s += ln([(1000, 506), (1000, 640), (710, 640)], arrow=None) + '<text x="1007" y="524" class="lb">1</text><text x="718" y="634" class="lb">*</text>'
     s += ('<text x="740" y="690" class="sm">booking: частичный уникальный индекс</text>'
           '<text x="740" y="710" class="sm">(slot_id, student_id) для активных статусов</text>')
     return page("entity-relationship view &nbsp;LabQueue", 1100, 790, s)
@@ -265,7 +265,9 @@ def main():
     for v, title, note in (("v1", "План итераций, версия 1 (29.10.2026): 149 ч", "не укладывается: последняя итерация до 03.01"),
                            ("v2", "План итераций, версия 2 (30.10.2026): 131 ч", "запас до дедлайна — 9 ч"),
                            ("v3", "План итераций, версия 3 (04.11.2026): разработчик 128 ч + junior 29 ч",
-                            "фиолетовым — задачи junior-разработчика")):
+                            "фиолетовым — задачи junior-разработчика"),
+                           ("v4", "План итераций, версия 4 (04.11.2026): разработчик 130 ч + junior 39 ч",
+                            "добавлены F19 и F20 по запросу Заказчика; фиолетовым — задачи junior")):
         rows = plan_rows(P[v], v)
         html = gantt(rows, title, lanes_note=note)
         figs[f"gantt-{v}"] = (html, 1140, 70 + 34 * len(rows) + 140)

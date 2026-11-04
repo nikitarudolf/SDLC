@@ -157,7 +157,7 @@ def ui_slots():
     return frame("part def SlotsScreen :&gt; Screen &nbsp; [Слоты защиты]", body)
 
 
-def _dialog(label, slot, lab, hint, seats, estimate, rules, buttons):
+def _dialog(label, slot, lab, hint, seats, estimate, rules, buttons, ack=""):
     inner = ('<div class="card" style="width:440px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)">'
              '<div class="h" style="font-size:16px">Запись на защиту</div>'
              + P("slotInfo : TextLabel", f'<div style="font-size:13px">{slot}</div>')
@@ -166,8 +166,12 @@ def _dialog(label, slot, lab, hint, seats, estimate, rules, buttons):
              + P("seatsInfo : Badge", seats, "margin-top:8px")
              + P("estimate : Panel", f'<div style="background:#eff6ff;border-radius:6px;padding:10px;font-size:12.5px">{estimate}</div>', "margin-top:8px")
              + P("rulesNote : TextLabel", f'<div class="muted">{rules}</div>', "margin-top:8px")
+             + (P("noShowAck : CheckBox", ack, "margin-top:8px") if ack else "")
              + f'<div class="row" style="justify-content:flex-end;margin-top:10px">{buttons}</div></div>')
     return P(label, inner, "padding:17px 5px 5px;background:transparent")
+
+
+ACK = '<div style="font-size:12.5px;background:#fef2f2;border-radius:6px;padding:8px;color:#7f1d1d">☑ Я понимаю, что если не подойду в течение 5 минут после вызова, запись будет аннулирована</div>'
 
 
 def ui_booking():
@@ -177,7 +181,8 @@ def ui_booking():
                    "Ваша позиция: <b>9</b> · расчётное время <b>13:00</b>",
                    "Отменить или перенести запись можно до 10:40 30.10.",
                    P("cancelButton : Button", '<span class="btn sec">Отмена</span>', "min-width:150px")
-                   + P("confirmButton : Button", '<span class="btn">Записаться</span>', "min-width:160px"))
+                   + P("confirmButton : Button", '<span class="btn">Записаться</span>', "min-width:160px"),
+                   ack=ACK)
     right = _dialog("bookingDialog : BookingDialog  [слот заполнен]",
                     "<b>СиФО ВМ</b> · Вт 28.10.2026 · 13:55–15:30<br>ауд. 413-1 · Сидоров К. Л.",
                     "ЛР № 3 ▾", "ЛР № 1–2 защищены", '<span class="bd r">Мест нет · в листе ожидания 3</span>',
@@ -185,16 +190,17 @@ def ui_booking():
                     "вы получите его автоматически и письмо на e-mail.",
                     "В листе ожидания можно быть не более чем в трёх слотах.",
                     P("cancelButton : Button", '<span class="btn sec">Отмена</span>', "min-width:150px")
-                    + P("waitlistButton : Button", '<span class="btn" style="background:#7c3aed;border-color:#7c3aed">Встать в лист ожидания</span>'))
+                    + P("waitlistButton : Button", '<span class="btn" style="background:#7c3aed;border-color:#7c3aed">Встать в лист ожидания</span>'),
+                    ack=ACK)
     shade = "".join('<div style="height:26px;margin:9px 0;background:#e2e8f0;border-radius:4px"></div>' for _ in range(9))
     page = (navbar(["Слоты", "Мои записи", "Прогресс"], "Слоты", "Кузьмин Д. · гр. 450501")
-            + f'<div style="position:relative;padding:14px;height:600px;overflow:hidden">{shade}'
+            + f'<div style="position:relative;padding:14px;height:680px;overflow:hidden">{shade}'
             '<div style="position:absolute;inset:0;background:rgba(15,23,42,.45)"></div>'
             f'<div class="row" style="position:absolute;inset:0;justify-content:center;align-items:flex-start;padding-top:22px;gap:24px">{left}{right}</div></div>')
     body = (browser("https://labqueue.app/slots#book", page)
             + '<div class="notes">'
-            + note("Запись: окно от 7 суток до 1 часа до начала, в слоте — одна запись студента, по дисциплине — "
-                   "не более двух активных записей, защищённую ЛР выбрать нельзя (REQ-FUNC-007).")
+            + note("Запись: окно от 7 суток до 1 часа до начала, не более двух активных записей по дисциплине. "
+                   "Без флажка-подтверждения о неявке кнопка недоступна (REQ-FUNC-007, REQ-FUNC-020).")
             + note("Мест нет → лист ожидания (REQ-FUNC-009). Освободившееся место первый в листе получает "
                    "автоматически; за 30 мин до начала лист замораживается (REQ-FUNC-010).")
             + '</div>')
@@ -214,7 +220,9 @@ def ui_my():
             + P("aheadCount : TextLabel", '<div class="muted">Перед вами</div><div style="font:700 22px Segoe UI">2 человека</div>', "flex:1")
             + P("myPos : TextLabel", '<div class="muted">Ваша позиция</div><div style="font:700 22px Segoe UI;color:#1d4ed8">4</div>', "flex:1")
             + P("eta : TextLabel", '<div class="muted">Расчётное время</div><div style="font:700 22px Segoe UI">≈ 10:41</div>', "flex:1")
-            + '</div>' + P("queueStrip : Badge[*]", f'<div class="row" style="gap:6px">{strip}</div>', "margin-top:8px") + '</div>')
+            + '</div>' + P("queueStrip : Badge[*]", f'<div class="row" style="gap:6px">{strip}</div>', "margin-top:8px")
+            + P("noShowWarning : TextLabel", '<div style="color:#b91c1c;font-size:12.5px;font-weight:600">⚠ Подойдите к аудитории к 10:41. '
+                'Если не подойти в течение 5 минут после вызова, запись будет аннулирована</div>', "margin-top:8px") + '</div>')
     bookings = ('<table class="t"><tr><th>Дисциплина</th><th>ЛР</th><th>Слот</th><th>Поз.</th><th>Расчётное</th><th>Статус</th><th>Действия</th></tr>'
                 '<tr><td>ЖЦРПО</td><td>№ 4</td><td>Вт 28.10 10:00</td><td>4</td><td>10:41</td><td><span class="bd y">Идёт защита</span></td>'
                 '<td><span class="btn sm gray">Перенести</span> <span class="btn sm gray">Отменить</span></td></tr>'
@@ -238,7 +246,7 @@ def ui_my():
             + '</div>' + P("progress : Panel", prog, "width:260px;align-self:flex-start") + '</div>')
     body = (browser("https://labqueue.app/my", page)
             + '<div class="notes">'
-            + note("Позиция и расчётное время обновляются без перезагрузки страницы, задержка не более 5 с "
+            + note("Позиция и расчётное время обновляются без перезагрузки страницы, задержка не более 10 с "
                    "(REQ-FUNC-013, REQ-PERF-002). Других студентов в очереди студент видит только как «Фамилия И.» (REQ-SEC-003).")
             + note("Перенос атомарный: старая запись сохраняется, пока не получена новая (REQ-FUNC-008). "
                    "За 1 час до начала кнопки недоступны.")
@@ -334,6 +342,46 @@ def ui_live():
                    "не позже 5 с (REQ-PERF-002).")
             + '</div>')
     return frame("part def LiveQueueScreen :&gt; Screen &nbsp; [Живая очередь]", body)
+
+
+def ui_reports():
+    filters = ('<div class="row" style="align-items:flex-end">'
+               + P("discipline : ComboBox", '<div class="lbl">Дисциплина</div><div class="inp" style="width:170px">ЖЦРПО ▾</div>')
+               + P("group : ComboBox", '<div class="lbl">Группа</div><div class="inp" style="width:120px">450501 ▾</div>')
+               + P("period : DateRange", '<div class="lbl">Период</div><div class="inp" style="width:190px">01.09 – 27.12.2026</div>')
+               + '<div style="flex:1"></div>'
+               + P("exportButton : Button", '<span class="btn sec">⬇ Выгрузить .xlsx</span>') + '</div>')
+    tabs = P("reportTabs : Tabs", '<div class="row" style="gap:0;border-bottom:1px solid #cbd5e1">'
+             '<span style="padding:8px 16px;color:#64748b">Ведомость</span>'
+             '<span style="padding:8px 16px;border-bottom:3px solid #2563eb;font-weight:700">Отчёт о записи</span></div>')
+    cards = "".join(
+        f'<div class="card" style="flex:1;border-left:5px solid {c}"><div class="muted">{t}</div>'
+        f'<div style="font:700 26px Segoe UI">{v}</div></div>'
+        for t, v, c in [("Не записывались", 4, "#dc2626"), ("Записаны", 15, "#2563eb"),
+                        ("В листе ожидания", 3, "#7c3aed"), ("Неявки", 2, "#d97706")])
+    rows = [("Белов Г.", '<span class="bd r">Не записывался</span>', 0, 0, 0, 0, "—"),
+            ("Жук Т.", '<span class="bd v">В листе ожидания</span>', 1, 1, 0, 0, "лист: Чт 06.11, 2-й"),
+            ("Иванов И.", '<span class="bd b">Записан</span>', 3, 2, 0, 0, "Вт 11.11 10:00, ЛР 3, поз. 2"),
+            ("Ковалёва В.", '<span class="bd y">Неявка</span>', 2, 1, 0, 1, "—"),
+            ("Кузьмин Д.", '<span class="bd b">Записан</span>', 4, 2, 1, 0, "Чт 06.11 11:40, ЛР 5, поз. 6"),
+            ("Лисовская Н.", '<span class="bd r">Не записывалась</span>', 0, 0, 0, 0, "—"),
+            ("Орлова Е.", '<span class="bd b">Записана</span>', 2, 1, 0, 0, "Вт 11.11 10:00, ЛР 2, поз. 5"),
+            ("Петров П.", '<span class="bd y">Неявка</span>', 3, 1, 1, 1, "—")]
+    trs = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>" for r in rows)
+    table = (f'<table class="t"><tr><th>Студент</th><th>Категория</th><th>Записей</th><th>Защищено</th>'
+             f'<th>На доработку</th><th>Неявок</th><th>Ближайшая запись</th></tr>{trs}</table>')
+    page = (navbar(["Расписание", "Отчёты", "Журнал"], "Отчёты", "Петрова А. С. · преподаватель")
+            + '<div style="padding:14px" class="col">' + P("filters : Panel", filters) + tabs
+            + P("summary : Panel", f'<div class="row">{cards}</div>')
+            + P("activityTable : Table", table) + '</div>')
+    body = (browser("https://labqueue.app/teacher/reports?tab=activity", page)
+            + '<div class="notes">'
+            + note("Категории: «Не записывались» — ни одной записи и листа ожидания за период; «Записаны» — есть запись "
+                   "на предстоящий слот; карточки фильтруют таблицу (REQ-FUNC-019).")
+            + note("Неявка — отметка «Не явился» через 5 мин после вызова, запись аннулирована (REQ-FUNC-020). "
+                   "Вкладка «Ведомость» — студенты × ЛР (REQ-FUNC-018).")
+            + '</div>')
+    return frame("part def TeacherReportsScreen :&gt; Screen &nbsp; [Отчёты преподавателя]", body)
 
 
 # ------------------------------------------------------------------ SVG-диаграммы
@@ -511,7 +559,7 @@ def booking_states():
     s += st(1030, 380, 240, 90, "Defending", "студент вызван|и защищается", "#fff7ed", "#ea580c")
     s += st(1400, 230, 200, 80, "Passed", "ЛР защищена", "#f0fdf4", "#16a34a")
     s += st(1400, 385, 200, 80, "Rework", "на доработку,|нужна новая запись", "#fffbeb", "#d97706")
-    s += st(1400, 540, 200, 80, "NoShow", "неявка|(REQ-FUNC-016)", "#fef2f2", "#dc2626")
+    s += st(1400, 540, 200, 80, "NoShow", "запись аннулирована|(REQ-FUNC-020)", "#fef2f2", "#dc2626")
     s += st(660, 690, 240, 80, "Cancelled", "запись отменена,|место освобождено", "#f3f4f6", "#6b7280")
     s += st(660, 130, 240, 90, "Expired", "лист ожидания не дошёл|до студента", "#f3f4f6", "#6b7280")
     # из решения
@@ -528,7 +576,7 @@ def booking_states():
     s += line([(900, 425), (1030, 425)], arrow="full", label="accept Called", lx=965, ly=417)
     s += line([(1270, 400), (1330, 400), (1330, 270), (1400, 270)], arrow="full", label="accept Passed", lx=1336, ly=262, anchor="start")
     s += line([(1270, 425), (1400, 425)], arrow="full", label="accept Rework", lx=1336, ly=417)
-    s += line([(1270, 450), (1330, 450), (1330, 580), (1400, 580)], arrow="full", label="accept NoShow", lx=1336, ly=572, anchor="start")
+    s += line([(1270, 450), (1330, 450), (1330, 580), (1400, 580)], arrow="full", label="accept NoShow [≥ 5 мин]", lx=1336, ly=528, anchor="start")
     s += line([(300, 470), (300, 730), (660, 730)], arrow="full")
     s += ('<text x="308" y="640" class="lb">accept Cancel [minutesToStart ≥ 60]</text>'
           '<text x="308" y="654" class="lb">/ startPromotion</text>')
@@ -541,7 +589,7 @@ def booking_states():
           '<text x="32" y="818" class="lb" style="font-style:italic;fill:#8a7a1f">comment</text>'
           '<text x="32" y="836" class="lb">minutesToStart — минут до начала слота; position — позиция в листе ожидания. Окно записи — от 7 суток до 1 ч до начала (REQ-FUNC-007);</text>'
           '<text x="32" y="851" class="lb">за 30 мин до начала лист ожидания замораживается (REQ-FUNC-010), освободившиеся места не перераспределяются, расчётное время пересчитывается (REQ-FUNC-011).</text>'
-          '<text x="32" y="866" class="lb">Rework не закрывает ЛР — студент записывается снова; две записи NoShow подряд ограничивают запись по дисциплине на 7 суток (REQ-FUNC-016).</text>')
+          '<text x="32" y="866" class="lb">Rework не закрывает ЛР — студент записывается снова; NoShow ставится не раньше чем через 5 мин после вызова, запись аннулируется (REQ-FUNC-020).</text>')
     return svg_page("state def BookingState &nbsp;[state transition view]", 1700, 890, s)
 
 
@@ -564,27 +612,31 @@ def navigation():
     s += line([(860, 360), (650, 250)], arrow="full", label="«Слоты»", lx=720, ly=320, anchor="end")
     s += line([(690, 590), (860, 590)], arrow="full", label="startSlot", lx=775, ly=582)
     s += line([(860, 625), (690, 625)], arrow="full", label="finishSlot", lx=775, ly=642)
+    s += st(1190, 560, 260, 90, "Reports", "TeacherReportsScreen|/teacher/reports", "#f0fdf4", "#16a34a")
+    s += line([(520, 650), (520, 700), (1300, 700), (1300, 650)], arrow="full", label="«Отчёты»", lx=900, ly=693)
+    s += line([(1340, 560), (1340, 520), (600, 520), (600, 560)], arrow="full", label="«Расписание»", lx=900, ly=513)
     s += ('<rect x="1190" y="300" width="270" height="110" fill="#fff8c4" stroke="#d6c45a"/>'
           '<text x="1202" y="318" class="lb" style="font-style:italic;fill:#8a7a1f">comment</text>'
           '<text x="1202" y="338" class="lb">Из любого экрана: logout → Login.</text>'
           '<text x="1202" y="355" class="lb">Слоты и «Мои записи» доступны</text>'
           '<text x="1202" y="370" class="lb">только роли Student, расписание и</text>'
-          '<text x="1202" y="385" class="lb">живая очередь — роли Teacher</text>'
+          '<text x="1202" y="385" class="lb">очередь, отчёты — роли Teacher</text>'
           '<text x="1202" y="400" class="lb">(REQ-SEC-003).</text>')
-    return svg_page("state def Navigation &nbsp;[state transition view]", 1480, 690, s)
+    return svg_page("state def Navigation &nbsp;[state transition view]", 1480, 720, s)
 
 
 FIGURES = {
     "context": (context, 1720, 1050),
     "use-cases": (use_cases, 1720, 1085),
     "booking-states": (booking_states, 1740, 955),
-    "ui-navigation": (navigation, 1520, 755),
+    "ui-navigation": (navigation, 1520, 785),
     "ui-login": (ui_login, 1180, 700),
     "ui-slots": (ui_slots, 1180, 770),
-    "ui-booking-dialog": (ui_booking, 1180, 880),
-    "ui-my-bookings": (ui_my, 1180, 870),
+    "ui-booking-dialog": (ui_booking, 1180, 960),
+    "ui-my-bookings": (ui_my, 1180, 900),
     "ui-teacher-schedule": (ui_teacher, 1180, 1010),
     "ui-live-queue": (ui_live, 1180, 945),
+    "ui-teacher-reports": (ui_reports, 1180, 935),
 }
 
 
