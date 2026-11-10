@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Подтверждение e-mail')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="narrow">
+    <div class="card">
+        <th:block th:if="${ok}">
+            <h1>E-mail подтверждён</h1>
+            <p>Учётная запись активна, теперь можно войти.</p>
+        </th:block>
+        <th:block th:unless="${ok}">
+            <h1>Ссылка недействительна</h1>
+            <p>Ссылка устарела или уже использована. Зарегистрируйтесь ещё раз или войдите, если e-mail уже
+                подтверждён.</p>
+        </th:block>
+        <a class="btn" th:href="@{/login}">Ко входу</a>
+    </div>
+</main>
+</body>
+</html>

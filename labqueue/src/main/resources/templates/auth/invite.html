@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Приглашение')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="narrow">
+    <div class="card">
+        <th:block th:if="${invited}">
+            <h1>Задайте пароль</h1>
+            <p>Учётная запись: <b th:text="${invited.fullName}">ФИО</b> (<span th:text="${invited.email}">mail</span>)</p>
+            <div class="alert bad" th:if="${error}" th:text="${error}"></div>
+            <form th:action="@{/invite}" method="post">
+                <input type="hidden" name="token" th:value="${token}">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required>
+                <div class="muted">Не короче 8 символов, буквы и цифры</div>
+                <label for="passwordRepeat">Повторите пароль</label>
+                <input type="password" id="passwordRepeat" name="passwordRepeat" required>
+                <button class="btn" type="submit">Сохранить</button>
+            </form>
+        </th:block>
+        <th:block th:unless="${invited}">
+            <h1>Ссылка недействительна</h1>
+            <p>Приглашение устарело или уже использовано. Обратитесь к администратору.</p>
+        </th:block>
+    </div>
+</main>
+</body>
+</html>

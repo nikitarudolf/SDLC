@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Дисциплины')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments :: flash}"></th:block>
+    <div class="card">
+        <h1>Мои дисциплины</h1>
+        <table th:if="${!disciplines.isEmpty()}">
+            <thead>
+            <tr><th>Название</th><th>Число ЛР</th><th>Группы</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="d : ${disciplines}">
+                <td th:text="${d.name}">ЖЦРПО</td>
+                <td th:text="${d.labCount}">8</td>
+                <td><span th:each="g, st : ${d.sortedGroups()}"
+                          th:text="${g.number} + (${st.last} ? '' : ', ')">450501</span></td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="muted" th:if="${disciplines.isEmpty()}">Дисциплин пока нет.</p>
+    </div>
+    <div class="card" style="max-width:640px">
+        <h2>Новая дисциплина</h2>
+        <form th:action="@{/teacher/disciplines}" th:object="${form}" method="post">
+            <div class="alert bad" th:if="${#fields.hasGlobalErrors()}" th:text="${#fields.globalErrors()[0]}"></div>
+            <label for="name">Название</label>
+            <input type="text" id="name" th:field="*{name}">
+            <div class="field-error" th:errors="*{name}"></div>
+            <label for="labCount">Число лабораторных работ (1–15)</label>
+            <input type="number" id="labCount" min="1" max="15" th:field="*{labCount}">
+            <div class="field-error" th:errors="*{labCount}"></div>
+            <label>Группы</label>
+            <div class="checks">
+                <label th:each="g : ${groups}">
+                    <input type="checkbox" th:field="*{groupIds}" th:value="${g.id}">
+                    <span th:text="${g.number}">450501</span>
+                </label>
+            </div>
+            <div class="field-error" th:errors="*{groupIds}"></div>
+            <button class="btn" type="submit">Создать</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Расписание')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments :: flash}"></th:block>
+    <div class="card">
+        <div class="toolbar">
+            <h1 style="margin:0">Расписание защит</h1>
+            <span class="spacer"></span>
+            <a class="btn small" th:href="@{/teacher/slots/new}" th:if="${hasDisciplines}">Создать слот</a>
+        </div>
+        <div class="alert info" th:unless="${hasDisciplines}">
+            Сначала создайте дисциплину и привяжите к ней группы:
+            <a th:href="@{/teacher/disciplines}">Дисциплины</a>.
+        </div>
+        <table th:if="${!rows.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Дисциплина</th>
+                <th>Группы</th>
+                <th>Место</th>
+                <th>Защита</th>
+                <th>Записано</th>
+                <th>Состояние</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${rows}">
+                <td th:text="${r.day}">01.01</td>
+                <td th:text="${r.time}">10:00</td>
+                <td th:text="${r.discipline}">ЖЦРПО</td>
+                <td th:text="${r.groups}">450501</td>
+                <td th:text="${r.place}">505-5</td>
+                <td th:text="${r.defenseMinutes} + ' мин'">10 мин</td>
+                <td>
+                    <span th:text="${r.booked} + ' / ' + ${r.capacity}">0 / 9</span>
+                    <div class="muted" th:if="${r.waitlist > 0}" th:text="'ожидают: ' + ${r.waitlist}"></div>
+                </td>
+                <td>
+                    <span th:text="${r.phase}">Идёт запись</span>
+                    <div class="muted" th:if="${r.cancelReason}" th:text="${r.cancelReason}"></div>
+                </td>
+                <td><a class="btn small secondary" th:if="${r.editable}"
+                       th:href="@{/teacher/slots/{id}/edit(id=${r.id})}">Изменить</a></td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="muted" th:if="${rows.isEmpty() and hasDisciplines}">Слотов пока нет.</p>
+    </div>
+</main>
+</body>
+</html>

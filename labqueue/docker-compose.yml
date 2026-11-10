@@ -1,0 +1,37 @@
+# Запуск одной командой (REQ-INST-001): docker compose up -d --build
+# Настройки берутся из файла .env (пример — .env.example).
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: labqueue
+      POSTGRES_USER: ${DB_USER:-labqueue}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?задайте DB_PASSWORD в .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-labqueue} -d labqueue"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/labqueue
+      DB_USER: ${DB_USER:-labqueue}
+      DB_PASSWORD: ${DB_PASSWORD}
+      BASE_URL: ${BASE_URL:-http://localhost:8080}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

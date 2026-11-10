@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' — LabQueue'">LabQueue</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header class="top" th:fragment="header">
+    <span class="brand">LabQueue</span>
+    <nav>
+        <th:block sec:authorize="hasRole('STUDENT')">
+            <a th:href="@{/slots}">Слоты защиты</a>
+        </th:block>
+        <th:block sec:authorize="hasRole('TEACHER')">
+            <a th:href="@{/teacher/slots}">Расписание</a>
+            <a th:href="@{/teacher/slots/new}">Новый слот</a>
+            <a th:href="@{/teacher/disciplines}">Дисциплины</a>
+        </th:block>
+        <th:block sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/groups}">Группы</a>
+            <a th:href="@{/admin/teachers}">Преподаватели</a>
+        </th:block>
+    </nav>
+    <th:block sec:authorize="isAuthenticated()">
+        <span class="who" sec:authentication="name">user</span>
+        <form th:action="@{/logout}" method="post"><button type="submit">Выйти</button></form>
+    </th:block>
+</header>
+
+<th:block th:fragment="flash">
+    <div class="alert ok" th:if="${message}" th:text="${message}">ok</div>
+    <div class="alert bad" th:if="${error}" th:text="${error}">error</div>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Вход')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="narrow">
+    <div class="card">
+        <h1>Вход в LabQueue</h1>
+        <div class="alert bad" th:if="${param.error}">Неверный e-mail или пароль</div>
+        <div class="alert bad" th:if="${param.locked}">
+            Слишком много неудачных попыток. Вход заблокирован на 15 минут.
+        </div>
+        <div class="alert bad" th:if="${param.unverified}">
+            Подтвердите e-mail по ссылке из письма, чтобы войти.
+        </div>
+        <div class="alert ok" th:if="${param.logout}">Вы вышли из системы.</div>
+        <div class="alert ok" th:if="${param.activated}">Пароль сохранён, теперь можно войти.</div>
+        <form th:action="@{/login}" method="post">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required autofocus>
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required>
+            <button class="btn" type="submit">Войти</button>
+        </form>
+        <p class="muted">Нет учётной записи? <a th:href="@{/register}">Зарегистрироваться</a></p>
+    </div>
+</main>
+</body>
+</html>

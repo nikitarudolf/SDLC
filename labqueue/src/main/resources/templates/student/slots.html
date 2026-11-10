@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Слоты защиты')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+    <div class="card">
+        <h1>Слоты защиты</h1>
+        <p class="muted">
+            <span th:text="${student.fullName}">ФИО</span>, группа
+            <span th:text="${student.group != null ? student.group.number : '—'}">450501</span>
+        </p>
+        <div class="toolbar">
+            <a class="btn small secondary" th:href="@{/slots(week=${prevWeek},discipline=${discipline})}">← неделя</a>
+            <b th:text="${weekLabel}">неделя</b>
+            <a class="btn small secondary" th:href="@{/slots(week=${nextWeek},discipline=${discipline})}">неделя →</a>
+            <span class="spacer"></span>
+            <form th:action="@{/slots}" method="get">
+                <input type="hidden" name="week" th:value="${monday}">
+                <select name="discipline" onchange="this.form.submit()">
+                    <option value="">Все дисциплины</option>
+                    <option th:each="d : ${disciplines}" th:value="${d.key}" th:text="${d.value}"
+                            th:selected="${discipline == d.key}">дисциплина</option>
+                </select>
+            </form>
+        </div>
+        <table th:if="${!rows.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Дисциплина</th>
+                <th>Преподаватель</th>
+                <th>Место</th>
+                <th>Свободно</th>
+                <th>Статус</th>
+                <th>Моя запись</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${rows}">
+                <td th:text="${r.day}">01.01</td>
+                <td th:text="${r.time}">10:00</td>
+                <td th:text="${r.discipline}">ЖЦРПО</td>
+                <td th:text="${r.teacher}">Преподаватель</td>
+                <td th:text="${r.place}">505-5</td>
+                <td>
+                    <span th:text="${r.freeSeats} + ' из ' + ${r.capacity}">3 из 9</span>
+                    <div class="muted" th:if="${r.waitlist > 0}" th:text="'лист ожидания: ' + ${r.waitlist}"></div>
+                </td>
+                <td>
+                    <span class="badge" th:classappend="${r.availabilityCss}" th:text="${r.availability}">Свободно</span>
+                    <div class="muted" th:text="${r.cancelReason != null ? r.cancelReason : r.phase}">фаза</div>
+                </td>
+                <td th:text="${r.myStatus}">—</td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${rows.isEmpty()}" class="muted">На этой неделе слотов для вашей группы нет.</p>
+    </div>
+    <p class="muted">Запись на защиту и лист ожидания появятся в итерации I2 (F07–F09).</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Преподаватели')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments :: flash}"></th:block>
+    <div class="card">
+        <h1>Преподаватели</h1>
+        <table th:if="${!teachers.isEmpty()}">
+            <thead><tr><th>ФИО</th><th>E-mail</th><th>Состояние</th></tr></thead>
+            <tbody>
+            <tr th:each="t : ${teachers}">
+                <td th:text="${t.fullName}">ФИО</td>
+                <td th:text="${t.email}">mail</td>
+                <td th:text="${t.canLogIn() ? 'активен' : 'приглашение отправлено'}">активен</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="muted" th:if="${teachers.isEmpty()}">Преподавателей пока нет.</p>
+    </div>
+    <div class="card" style="max-width:520px">
+        <h2>Пригласить преподавателя</h2>
+        <form th:action="@{/admin/teachers}" method="post">
+            <label for="fullName">ФИО</label>
+            <input type="text" id="fullName" name="fullName" required>
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required>
+            <button class="btn" type="submit">Отправить приглашение</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

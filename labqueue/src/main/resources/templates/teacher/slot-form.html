@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Новый слот')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main style="max-width:640px">
+    <div class="card">
+        <h1>Новый слот защиты</h1>
+        <form th:action="@{/teacher/slots}" th:object="${form}" method="post">
+            <div class="alert bad" th:if="${#fields.hasGlobalErrors()}" th:text="${#fields.globalErrors()[0]}"></div>
+
+            <label for="disciplineId">Дисциплина</label>
+            <select id="disciplineId" th:field="*{disciplineId}">
+                <option value="">— выберите —</option>
+                <option th:each="d : ${disciplines}" th:value="${d.id}"
+                        th:text="${d.name} + ' (' + ${d.labCount} + ' ЛР)'">ЖЦРПО</option>
+            </select>
+            <div class="field-error" th:errors="*{disciplineId}"></div>
+
+            <label>Группы</label>
+            <div class="checks">
+                <label th:each="g : ${groups}">
+                    <input type="checkbox" th:field="*{groupIds}" th:value="${g.id}">
+                    <span th:text="${g.number}">450501</span>
+                </label>
+            </div>
+            <div class="muted">Группы, привязанные к дисциплине:
+                <th:block th:each="d, st : ${disciplines}">
+                    <span th:text="${d.name} + ' — ' + ${#strings.listJoin(d.sortedGroups().![number], ', ')}
+                                   + (${st.last} ? '' : '; ')">ЖЦРПО — 450501</span>
+                </th:block>
+            </div>
+            <div class="field-error" th:errors="*{groupIds}"></div>
+
+            <div class="row">
+                <div>
+                    <label for="date">Дата</label>
+                    <input type="date" id="date" th:field="*{date}">
+                    <div class="field-error" th:errors="*{date}"></div>
+                </div>
+                <div>
+                    <label for="startTime">Начало</label>
+                    <input type="time" id="startTime" th:field="*{startTime}">
+                    <div class="field-error" th:errors="*{startTime}"></div>
+                </div>
+                <div>
+                    <label for="endTime">Окончание</label>
+                    <input type="time" id="endTime" th:field="*{endTime}">
+                    <div class="field-error" th:errors="*{endTime}"></div>
+                </div>
+            </div>
+
+            <label for="place">Место (аудитория или ссылка)</label>
+            <input type="text" id="place" th:field="*{place}" placeholder="ауд. 505-5">
+            <div class="field-error" th:errors="*{place}"></div>
+
+            <label for="defenseMinutes">Длительность одной защиты, мин</label>
+            <input type="number" id="defenseMinutes" min="5" max="30" th:field="*{defenseMinutes}">
+            <div class="muted">Вместимость рассчитывается автоматически: длина слота / длительность защиты</div>
+            <div class="field-error" th:errors="*{defenseMinutes}"></div>
+
+            <button class="btn" type="submit">Создать слот</button>
+            <a class="btn secondary" th:href="@{/teacher/slots}">Отмена</a>
+        </form>
+    </div>
+</main>
+</body>
+</html>

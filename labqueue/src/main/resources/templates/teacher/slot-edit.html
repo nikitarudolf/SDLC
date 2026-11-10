@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Изменение слота')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main style="max-width:640px">
+    <th:block th:replace="~{fragments :: flash}"></th:block>
+    <div class="card">
+        <h1>Изменение слота</h1>
+        <p>
+            <b th:text="${slot.discipline.name}">ЖЦРПО</b>,
+            <span th:text="${#temporals.format(slot.startsAt.atZone(@appZone), 'dd.MM.yyyy')}">01.01.2026</span>
+            <span th:text="${timeRange}">10:00–11:30</span>,
+            группы <span th:text="${slot.groupNumbers()}">450501</span>,
+            вместимость <span th:text="${slot.capacity}">9</span>
+        </p>
+        <form th:action="@{/teacher/slots/{id}(id=${slot.id})}" th:object="${form}" method="post">
+            <div class="alert bad" th:if="${#fields.hasGlobalErrors()}" th:text="${#fields.globalErrors()[0]}"></div>
+            <label for="place">Место</label>
+            <input type="text" id="place" th:field="*{place}">
+            <div class="field-error" th:errors="*{place}"></div>
+            <label for="endTime">Окончание</label>
+            <input type="time" id="endTime" th:field="*{endTime}">
+            <div class="muted">Сократить слот ниже числа уже записанных студентов нельзя</div>
+            <div class="field-error" th:errors="*{endTime}"></div>
+            <button class="btn" type="submit">Сохранить</button>
+            <a class="btn secondary" th:href="@{/teacher/slots}">Назад</a>
+        </form>
+    </div>
+    <div class="card">
+        <h2>Отменить слот</h2>
+        <p class="muted">Все записи и лист ожидания будут отменены, студенты получат письмо с причиной.</p>
+        <form th:action="@{/teacher/slots/{id}/cancel(id=${slot.id})}" method="post">
+            <label for="reason">Причина</label>
+            <input type="text" id="reason" name="reason" required maxlength="500">
+            <button class="btn danger" type="submit">Отменить слот</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

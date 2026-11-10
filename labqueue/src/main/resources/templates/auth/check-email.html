@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Подтвердите e-mail')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="narrow">
+    <div class="card">
+        <h1>Подтвердите e-mail</h1>
+        <p>На адрес <b th:text="${email}">mail</b> отправлено письмо со ссылкой. Перейдите по ней в течение
+            24 часов, после этого можно будет войти.</p>
+        <a class="btn secondary" th:href="@{/login}">Ко входу</a>
+    </div>
+</main>
+</body>
+</html>

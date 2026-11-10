@@ -1,0 +1,50 @@
+name: LabQueue CI
+
+on:
+  push:
+    paths:
+      - "labqueue/**"
+      - ".github/workflows/labqueue.yml"
+  pull_request:
+    paths:
+      - "labqueue/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: labqueue
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: labqueue
+          POSTGRES_USER: labqueue
+          POSTGRES_PASSWORD: labqueue
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U labqueue"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Тесты (H2) и сборка
+        run: mvn -B verify
+      - name: Миграции и проверка схемы на PostgreSQL 16
+        run: |
+          java -jar target/labqueue.jar &
+          for i in $(seq 1 40); do
+            curl -sf http://localhost:8080/actuator/health && exit 0
+            sleep 3
+          done
+          exit 1
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/labqueue
+          DB_USER: labqueue
+          DB_PASSWORD: labqueue

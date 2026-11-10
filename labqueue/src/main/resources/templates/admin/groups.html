@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Группы')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main>
+    <th:block th:replace="~{fragments :: flash}"></th:block>
+    <div class="card" th:if="${result}">
+        <h2 th:text="'Импорт группы ' + ${result.group}">Импорт</h2>
+        <p>Создано учётных записей: <b th:text="${result.created}">0</b>. Студенты получили приглашения задать
+            пароль.</p>
+        <th:block th:if="${!result.skipped.isEmpty()}">
+            <p>Пропущено:</p>
+            <ul><li th:each="s : ${result.skipped}" th:text="${s}">s</li></ul>
+        </th:block>
+        <th:block th:if="${!result.errors.isEmpty()}">
+            <p>Строки с ошибками:</p>
+            <ul><li th:each="e : ${result.errors}" th:text="${e}">e</li></ul>
+        </th:block>
+    </div>
+    <div class="card">
+        <h1>Учебные группы</h1>
+        <table th:if="${!groups.isEmpty()}">
+            <thead>
+            <tr><th>Группа</th><th>Студентов</th><th>Импорт списка (.csv: «ФИО;e-mail», до 1 МБ)</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="g : ${groups}">
+                <td th:text="${g.number}">450501</td>
+                <td th:text="${sizes.get(g.id)}">0</td>
+                <td>
+                    <form th:action="@{/admin/groups/{id}/import(id=${g.id})}" method="post"
+                          enctype="multipart/form-data" style="display:flex;gap:8px;align-items:center">
+                        <input type="file" name="file" accept=".csv" required>
+                        <button class="btn small" type="submit">Загрузить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="muted" th:if="${groups.isEmpty()}">Групп пока нет.</p>
+        <form th:action="@{/admin/groups}" method="post" style="display:flex;gap:8px;align-items:end;max-width:420px">
+            <div style="flex:1">
+                <label for="number">Новая группа</label>
+                <input type="text" id="number" name="number" placeholder="450501" pattern="\d{6}" required>
+            </div>
+            <button class="btn small" type="submit" style="height:34px">Добавить</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

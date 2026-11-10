@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Ошибка')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="narrow">
+    <div class="card">
+        <h1 th:switch="${status}">
+            <span th:case="403">Нет доступа</span>
+            <span th:case="404">Страница не найдена</span>
+            <span th:case="409">Действие невозможно</span>
+            <span th:case="*">Ошибка</span>
+        </h1>
+        <p th:text="${message != null and !#strings.isEmpty(message) ? message : 'Код ошибки ' + status}">сообщение</p>
+        <a class="btn secondary" th:href="@{/}">На главную</a>
+    </div>
+</main>
+</body>
+</html>

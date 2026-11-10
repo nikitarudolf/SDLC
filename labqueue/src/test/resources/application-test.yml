@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:labqueue-test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  flyway:
+    locations: classpath:db/migration
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+
+labqueue:
+  base-url: http://localhost
+  admin:
+    email: admin@test.local
+    password: admin12345

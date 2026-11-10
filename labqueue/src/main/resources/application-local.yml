@@ -1,0 +1,26 @@
+# Запуск без Docker и PostgreSQL: ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+# База H2 в памяти, демонстрационные данные создаёт DemoData. Пароли ниже — только для локальной проверки.
+spring:
+  datasource:
+    url: jdbc:h2:mem:labqueue;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  flyway:
+    locations: classpath:db/migration
+  thymeleaf:
+    cache: false
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+
+labqueue:
+  base-url: http://localhost:8080
+  admin:
+    email: admin@labqueue.local
+    password: admin12345
+  demo:
+    enabled: true
+    password: demo12345
