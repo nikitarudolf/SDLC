@@ -1,0 +1,31 @@
+@startuml uml-seq-booking
+' Диаграмма последовательности: запись на защиту (sdd/images/uml-seq-booking.png)
+actor Студент as S
+participant "BookingController" as C <<web>>
+participant "BookingService" as B <<booking>>
+participant "QueuePolicy" as P <<queue>>
+database "PostgreSQL" as DB
+
+S -> C : POST /slots/7/bookings (lab=3, ack=true)
+activate C
+C -> B : book(slot=7, student, lab=3, ack)
+activate B
+B -> DB : BEGIN; SELECT slot WHERE id=7 FOR UPDATE
+DB --> B : слот и записи
+B -> P : validate(slot, student, lab, now)
+P -> P : проверить окно, лимит, ЛР
+P --> B : OK
+alt есть свободные места
+  B -> P : assignPosition(slot)
+  P --> B : position = 9
+  B -> DB : INSERT booking (BOOKED, position, ack_at)
+else мест нет, лист ожидания < 3
+  B -> DB : INSERT booking (WAITLISTED)
+end
+B -> DB : INSERT journal; INSERT outbox_email; COMMIT
+DB --> B : ok
+B --> C : BookingResult (status, position, eta)
+deactivate B
+C --> S : 303 → /my
+deactivate C
+@enduml

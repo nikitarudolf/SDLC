@@ -1,0 +1,14 @@
+@startuml uml-state-slot
+' Диаграмма состояний слота (sdd/images/uml-state-slot.png)
+[*] --> Scheduled
+state Planned {
+  Scheduled --> Open : after 7 суток до начала
+  Open --> RegistrationClosed : after 1 ч до начала
+  RegistrationClosed --> Frozen : after 30 мин до начала
+}
+Planned --> Cancelled : cancel(reason)
+Planned --> InProgress : start [не раньше чем за 15 мин до начала]
+InProgress --> Finished : finish
+Cancelled --> [*]
+Finished --> [*]
+@enduml

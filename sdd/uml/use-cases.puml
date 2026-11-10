@@ -1,0 +1,59 @@
+@startuml uml-use-cases
+' Диаграмма прецедентов LabQueue (sdd/images/uml-use-cases.png)
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Студент" as Student
+actor "Преподаватель" as Teacher
+actor "Администратор" as Admin
+actor "Время\n(Планировщик)" as Timer
+actor "Почтовый сервер" as Smtp <<system>>
+
+rectangle "LabQueue" {
+  usecase "UC-01 Войти в систему" as UC01
+  usecase "UC-02 Зарегистрироваться" as UC02
+  usecase "UC-03 Просмотреть слоты" as UC03
+  usecase "UC-04 Записаться на защиту" as UC04
+  usecase "UC-05 Встать в лист ожидания" as UC05
+  usecase "UC-06 Отменить или перенести запись" as UC06
+  usecase "UC-07 Следить за позицией в очереди" as UC07
+  usecase "UC-08 Управлять слотами и сериями" as UC08
+  usecase "UC-09 Вести живую очередь" as UC09
+  usecase "UC-10 Вызвать вне очереди" as UC10
+  usecase "UC-11 Отметить неявку" as UC11
+  usecase "UC-12 Просмотреть ведомость и отчёт о записи" as UC12
+  usecase "UC-13 Выгрузить отчёт в Excel" as UC13
+  usecase "UC-14 Управлять преподавателями и группами" as UC14
+  usecase "UC-15 Продвинуть из листа ожидания" as UC15
+  usecase "UC-16 Заморозить лист ожидания" as UC16
+  usecase "UC-17 Отправить уведомления" as UC17
+}
+
+Student --> UC01
+Student --> UC02
+Student --> UC03
+Student --> UC04
+Student --> UC06
+Student --> UC07
+Teacher --> UC01
+Teacher --> UC08
+Teacher --> UC09
+Teacher --> UC12
+Admin --> UC01
+Admin --> UC14
+Timer --> UC16
+Timer --> UC17
+Smtp --> UC17
+
+UC05 .> UC04 : <<extend>>\n[мест нет]
+UC10 .> UC09 : <<extend>>\n[причина указана]
+UC11 .> UC09 : <<extend>>\n[прошло ≥ 5 мин]
+UC13 .> UC12 : <<extend>>
+UC06 ..> UC15 : <<include>>
+UC15 ..> UC17 : <<include>>
+
+note bottom of UC16
+  UC-02, UC-11 и UC-14 ставят письма
+  в очередь отправки (UC-17)
+end note
+@enduml

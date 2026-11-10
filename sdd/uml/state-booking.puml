@@ -1,0 +1,28 @@
+@startuml uml-state-booking
+' Диаграмма состояний записи (sdd/images/uml-state-booking.png)
+[*] --> Choice
+state Choice <<choice>>
+Choice --> Booked : [freeSeats > 0]
+Choice --> Waitlisted : [freeSeats == 0]
+
+Waitlisted --> Booked : SeatFreed [> 30 мин до начала,\nпервый в листе] / письмо «Вы записаны»
+Waitlisted --> Expired : SlotStarted
+Waitlisted --> Cancelled : Cancel
+Booked --> InQueue : SlotStarted
+Booked --> Cancelled : Cancel [≥ 60 мин] / продвинуть следующего
+InQueue --> Defending : Called
+Defending --> Passed : Passed
+Defending --> Rework : Rework
+Defending --> NoShow : NoShow [≥ 5 мин после вызова]\n/ письмо «Запись аннулирована»
+
+Passed --> [*]
+Rework --> [*]
+NoShow --> [*]
+Cancelled --> [*]
+Expired --> [*]
+
+note bottom
+  Окно записи закрывается за 60 минут до начала,
+  лист ожидания замораживается за 30 минут.
+end note
+@enduml

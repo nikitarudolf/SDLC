@@ -1,0 +1,32 @@
+@startuml uml-seq-noshow
+' Диаграмма последовательности: неявка студента (sdd/images/uml-seq-noshow.png)
+actor Преподаватель as T
+participant "LiveController" as C <<web>>
+participant "QueueService" as Q <<queue>>
+participant "QueuePolicy" as P <<queue>>
+database "PostgreSQL" as DB
+actor Студент as S
+
+T -> C : POST /teacher/bookings/57/mark (NO_SHOW)
+activate C
+C -> Q : mark(57, NO_SHOW, teacher)
+activate Q
+Q -> DB : BEGIN; SELECT slot FOR UPDATE; SELECT booking 57
+DB --> Q : booking (called_at = 10:21)
+Q -> P : minutesSinceCall(called_at, now)
+P --> Q : n минут
+alt n ≥ 5
+  Q -> DB : UPDATE booking → NO_SHOW; INSERT journal; INSERT outbox
+  Q -> P : callNext(slot)
+  P --> Q : следующий, позиция 4
+  Q -> DB : UPDATE booking SET called_at; COMMIT
+else n < 5
+  Q --> C : 409: ждать ещё (5 − n) мин
+end
+Q --> C : MarkResult
+deactivate Q
+C --> T : 200: очередь обновлена
+deactivate C
+S -> C : GET /api/slots/7/queue (If-None-Match)
+C --> S : 200 JSON: «вы следующий», позиция 4
+@enduml
