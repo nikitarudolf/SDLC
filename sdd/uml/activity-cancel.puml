@@ -1,5 +1,5 @@
 @startuml uml-activity-cancel
-' Диаграмма активности: отмена записи и продвижение (sdd/images/uml-activity-cancel.png)
+' Диаграмма активности: отмена записи и продвижение (sdd/images/uml-activity-cancel.png, .svg)
 |Студент|
 start
 :Нажать «Отменить» и подтвердить;

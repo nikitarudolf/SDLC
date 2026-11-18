@@ -1,5 +1,5 @@
 @startuml uml-state-slot
-' Диаграмма состояний слота (sdd/images/uml-state-slot.png)
+' Диаграмма состояний слота (sdd/images/uml-state-slot.png, .svg)
 [*] --> Scheduled
 state Planned {
   Scheduled --> Open : after 7 суток до начала

@@ -1,9 +1,9 @@
 @startuml uml-state-booking
-' Диаграмма состояний записи (sdd/images/uml-state-booking.png)
+' Диаграмма состояний записи (sdd/images/uml-state-booking.png); ромб выбора содержит вопрос «Есть свободные места?»
 [*] --> Choice
-state Choice <<choice>>
-Choice --> Booked : [freeSeats > 0]
-Choice --> Waitlisted : [freeSeats == 0]
+state "Есть свободные места?" as Choice <<choice>>
+Choice --> Booked : [да]
+Choice --> Waitlisted : [нет]
 
 Waitlisted --> Booked : SeatFreed [> 30 мин до начала,\nпервый в листе] / письмо «Вы записаны»
 Waitlisted --> Expired : SlotStarted

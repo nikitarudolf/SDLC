@@ -1,5 +1,5 @@
 @startuml uml-seq-booking
-' Диаграмма последовательности: запись на защиту (sdd/images/uml-seq-booking.png)
+' Диаграмма последовательности: запись на защиту (sdd/images/uml-seq-booking.png, .svg)
 actor Студент as S
 participant "BookingController" as C <<web>>
 participant "BookingService" as B <<booking>>

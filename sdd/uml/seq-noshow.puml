@@ -1,5 +1,5 @@
 @startuml uml-seq-noshow
-' Диаграмма последовательности: неявка студента (sdd/images/uml-seq-noshow.png)
+' Диаграмма последовательности: неявка студента (sdd/images/uml-seq-noshow.png, .svg)
 actor Преподаватель as T
 participant "LiveController" as C <<web>>
 participant "QueueService" as Q <<queue>>

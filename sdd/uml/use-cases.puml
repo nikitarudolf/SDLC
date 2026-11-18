@@ -1,5 +1,5 @@
 @startuml uml-use-cases
-' Диаграмма прецедентов LabQueue (sdd/images/uml-use-cases.png)
+' Диаграмма прецедентов LabQueue (sdd/images/uml-use-cases.png, .svg)
 left to right direction
 skinparam packageStyle rectangle
 

@@ -1,5 +1,5 @@
 @startuml uml-activity-booking
-' Диаграмма активности: запись на защиту (sdd/images/uml-activity-booking.png)
+' Диаграмма активности: запись на защиту (sdd/images/uml-activity-booking.png, .svg)
 |Студент|
 start
 :Выбрать слот и нажать «Записаться»;

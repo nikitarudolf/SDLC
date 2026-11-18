@@ -1,3 +1,25 @@
+# LabQueue — электронная очередь на защиту лабораторных работ
+
+Лабораторная работа № 5 по дисциплине «Жизненный цикл разработки программного обеспечения». Рудольф Н. В., группа 450501.
+
+[Отчёт в PDF](docs/lab5/report.pdf) · [Отчёт в Word](docs/lab5/report.docx) · [Приложение и инструкция по запуску](labqueue/README.md)
+
+## Модель динамического поведения
+
+[Глоссарий](srs/glossary-labqueue.md) · [Дополнительные спецификации](srs/supplementary-spec-labqueue.md) · [Актёры и сценарии](sdd/uml/use-cases.md) · [SDD](sdd/sdd-labqueue.md) · [Архитектурное решение ADR-0007](adr/labqueue/0007-describe-uml-as-text-plantuml.md)
+
+| Диаграмма | Рисунок | Исходник |
+|---|---|---|
+| Варианты использования | [SVG](sdd/images/uml-use-cases.svg) | [PlantUML](sdd/uml/use-cases.puml) |
+| Активность — запись на защиту | [SVG](sdd/images/uml-activity-booking.svg) | [PlantUML](sdd/uml/activity-booking.puml) |
+| Активность — отмена записи | [SVG](sdd/images/uml-activity-cancel.svg) | [PlantUML](sdd/uml/activity-cancel.puml) |
+| Состояния записи | [SVG](sdd/images/uml-state-booking.svg) | [PlantUML](sdd/uml/state-booking.puml) |
+| Состояния слота | [SVG](sdd/images/uml-state-slot.svg) | [PlantUML](sdd/uml/state-slot.puml) |
+| Последовательность — запись на защиту | [SVG](sdd/images/uml-seq-booking.svg) | [PlantUML](sdd/uml/seq-booking.puml) |
+| Последовательность — неявка | [SVG](sdd/images/uml-seq-noshow.svg) | [PlantUML](sdd/uml/seq-noshow.puml) |
+
+---
+
 # Кредит на жильё — учебный проект по дисциплине «Жизненный цикл разработки ПО»
 
 * **Автор:** Рудольф Никита Валерьевич
